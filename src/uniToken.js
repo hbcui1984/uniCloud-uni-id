@@ -1,7 +1,13 @@
 import jwt from 'jsonwebtoken'
+import {
+    tokenSecret
+} from './uni-id.config.json'
 
-const tokenSecret = 'your-pwd-sec'
 
+// const tokenSecret = 'your-pwd-sec'
+console.log(tokenSecret);
+
+// let tokenSecret = ""
 
 let uniToken = {
     createToken: function(user) {
@@ -15,27 +21,21 @@ let uniToken = {
         return token;
 
     },
+    refreshToken: function() {
+        // TODO 
+    },
 
     checkToken: function(token) {
         try {
             var decoded = jwt.verify(token, tokenSecret);
             console.log('decoded', decoded);
-            
-            // if(decoded.exp < new Date().getTime()){
-            //     return {
-            //         code: 1302,
-            //         msg: 'token已过期'
-            //     }
-            // }
 
-            
-            
             return decoded
         } catch (err) {
             return {
                 code: 1301,
                 msg: '非法token',
-                err:err
+                err: err
             }
         }
     }

@@ -1,5 +1,7 @@
 import commonjs from 'rollup-plugin-commonjs';
+import json from 'rollup-plugin-json';
 import resolve from 'rollup-plugin-node-resolve';
+
 
 export default {
     input: 'src/index.js',
@@ -7,5 +9,5 @@ export default {
         file: 'dist/index.js',
         format: 'cjs'
     },
-    plugins: [resolve(), commonjs()]
+    plugins: [resolve(), commonjs(),json()]
 };
