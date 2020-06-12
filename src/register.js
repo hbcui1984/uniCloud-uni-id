@@ -1,9 +1,8 @@
-const db = uniCloud.database();
-
 import encryptPwd from './encryptPwd.js'
+import userCollection from './init.js'
 
-async function register(user,context) {
-    const userInDB = await db.collection('users').where({
+async function register(user, context) {
+    const userInDB = await userCollection.where({
         username: user.username
     }).count()
 
@@ -17,10 +16,11 @@ async function register(user,context) {
         }
     } else {
 
-        user.register_ip = context.CLIENTIP
         user.password = encryptPwd(user.password)
-        
-        let addRes = await db.collection('users').add(user)
+        user.register_at = new Date().getTime()
+        user.register_ip = context.CLIENTIP
+
+        let addRes = await userCollection.add(user)
         console.log('addRes', addRes);
         if (addRes.id || addRes.affectedDocs === 1) {
             return {

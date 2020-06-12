@@ -12,13 +12,13 @@ exports.main = async (event, context) => {
 
     switch (event.action) {
         case 'register':
-            res = register(event, context);
+            res = register(event.params, context);
             break;
         case 'login':
-            res = login(event, context);
+            res = login(event.params, context);
             break;
         case 'updatePassword':
-            res = updatePwd(event, context);
+            res = updatePwd(event.params, context);
             break;
         default:
             res = {

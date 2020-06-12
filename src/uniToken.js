@@ -1,7 +1,7 @@
 import jwt from 'jsonwebtoken'
 import {
     tokenSecret
-} from './uni-id.config.json'
+} from './config.json'
 
 
 // const tokenSecret = 'your-pwd-sec'

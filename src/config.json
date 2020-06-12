@@ -1,0 +1,5 @@
+{
+    "moduleName": "uni-id",
+    "userCollectionName": "uni-id-users",
+    "tokenSecret": "your-pwd-sec"
+}

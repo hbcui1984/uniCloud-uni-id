@@ -1,8 +1,6 @@
 import encryptPwd from './encryptPwd.js'
 import uniToken from './uniToken.js'
-
-
-const userCollect = uniCloud.database().collection('users')
+import userCollection from './init.js'
 
 async function updatePwd(user, context) {
 
@@ -21,7 +19,7 @@ async function updatePwd(user, context) {
         }
     }
 
-    const userInDB = await userCollect.doc(user.uid).get()
+    const userInDB = await userCollection.doc(user.uid).get()
 
     console.log('userInDB:', userInDB);
 
@@ -33,7 +31,7 @@ async function updatePwd(user, context) {
 
 
             try {
-                await userCollect.doc(userInDB.data[0]._id).update({
+                await userCollection.doc(userInDB.data[0]._id).update({
                     password: encryptPwd(user.newPassword)
                 });
 
