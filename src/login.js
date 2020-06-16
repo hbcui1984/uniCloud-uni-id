@@ -19,15 +19,18 @@ async function login(user, context) {
             try {
                 console.log('开始修改最后登录时间');
 
+                let token = uniToken.createToken(userInDB.data[0])
+                console.log('token', token);
+
                 let upRes = await userCollection.doc(userInDB.data[0]._id).update({
                     last_login_at: new Date().getTime(),
-                    last_login_ip: context.CLIENTIP
+                    last_login_ip: context.CLIENTIP,
+                    token
                 });
 
                 console.log('upRes', upRes);
 
-                let token = uniToken.createToken(userInDB.data[0])
-                console.log('token', token);
+
 
                 return {
                     code: 0,
