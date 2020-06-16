@@ -2,13 +2,19 @@
 
 import register from './register.js'
 import login from './login.js'
+import logout from './logout.js'
 import updatePwd from './updatePwd.js'
+import uniToken from './uniToken.js'
 
 exports.main = async (event, context) => {
     //event为客户端上传的参数
     console.log('event : ' + event)
 
+
+    let params = event.params
     let res = {}
+    
+    let payload = {}
 
     switch (event.action) {
         case 'register':
@@ -17,8 +23,25 @@ exports.main = async (event, context) => {
         case 'login':
             res = login(event.params, context);
             break;
+        case 'logout':
+            payload = uniToken.checkToken(event.uniIdToken)
+            console.log('index::payload:', payload);
+
+            if (payload.code && payload.code > 0) {
+                return payload
+            }
+            res = logout(payload.uid, context);
+            break;
         case 'updatePassword':
-            res = updatePwd(event.params, context);
+            payload = uniToken.checkToken(event.uniIdToken)
+            console.log('index::payload:', payload);
+
+            if (payload.code && payload.code > 0) {
+                return payload
+            }
+            params.uid = payload.uid
+
+            res = updatePwd(params, context);
             break;
         default:
             res = {
