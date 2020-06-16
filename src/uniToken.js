@@ -24,7 +24,7 @@ let uniToken = {
         // TODO 
     },
 
-    checkToken: function(token) {
+    checkToken: async function(token) {
         try {
             let payload = jwt.verify(token, tokenSecret);
 
