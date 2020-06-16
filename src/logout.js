@@ -1,60 +1,29 @@
-const db = uniCloud.database();
-const userCollect = db.collection('users')
+import userCollection from './init.js'
 
-async function logout(user, context) {
-    const userInDB = await userCollect.where({
-        username: user.username
-    }).limit(1).get()
+/** 退出操作，从数据库中删除token
+ * @param {Object} uid
+ * @param {Object} context
+ */
+async function logout(uid, context) {
+    try {
+        let upRes = await userCollection.doc(uid).update({
+            token: ''
+        });
+        
+        //TODO 是否需要校验uid的真实性？即upRes.updated =0 时如何返回？
 
-
-    console.log('userInDB:', userInDB);
-
-
-    if (userInDB && userInDB.data && userInDB.data.length > 0) {
-
-        let pwdInDB = userInDB.data[0].password
-
-        if (user.password == pwdInDB) {
-
-
-            try {
-                await userCollect.doc(userInDB.data[0]._id).update({
-                    last_login_ip: context.CLIENTIP
-                });
-
-                console.log('upRes', upRes);
-
-                return {
-                    code: 0,
-                    msg: '登录成功'
-                }
-            } catch (e) {
-                return {
-                    code: 1104,
-                    msg: '数据库写入异常'
-                }
-            }
-
-
-        } else {
-            return {
-                code: 1102,
-                msg: '密码错误'
-            }
-        }
-    } else {
+        console.log('logout->upRes', upRes);
 
         return {
-            code: 1101,
-            msg: '用户不存在'
+            code: 0,
+            msg: '退出成功'
         }
-
+    } catch (e) {
+        return {
+            code: 1104,
+            msg: '数据库写入异常'
+        }
     }
-    return {
-        code: 0,
-        msg: 'success'
-    }
-
 }
 
-module.exports = logout
+export default logout
