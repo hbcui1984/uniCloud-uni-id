@@ -1,9 +1,10 @@
 import jwt from 'jsonwebtoken'
-// import {
-//     tokenSecret
-// } from './config.json'
+import userCollection from './init.js'
+import {
+    tokenSecret
+} from './config.json'
 
-const tokenSecret = 'your-pwd-sec'
+// const tokenSecret = 'your-pwd-sec'
 
 console.log(tokenSecret);
 
@@ -12,7 +13,7 @@ let uniToken = {
         var token = jwt.sign({
             uid: user._id
         }, tokenSecret, {
-            expiresIn: 60*60
+            expiresIn: 60 * 60
         });
 
 
@@ -25,14 +26,22 @@ let uniToken = {
 
     checkToken: function(token) {
         try {
-            console.log('checkToken 1');
-            var decoded = jwt.verify(token, tokenSecret);
-            console.log('checkToken 2');
-            console.log('decoded', decoded);
+            let payload = jwt.verify(token, tokenSecret);
 
-            return decoded
+            const userInDB = await userCollection.doc(payload.uid).get()
+
+            if (userInDB.data && userInDB.data.length > 0 && userInDB.data[0].token !== token) {
+                return {
+                    code: 1302,
+                    msg: 'token不合法，请重新登录'
+                }
+            }
+
+            console.log('checkToken payload', payload);
+
+            return payload
         } catch (err) {
-            console.log('checkToken 3',err);
+            console.log('checkToken 3', err);
             return {
                 code: 1301,
                 msg: '非法token',
