@@ -5,19 +5,19 @@ import userCollection from './init.js'
 async function updatePwd(user, context) {
 
 
-    let payload = uniToken.checkToken(user.token)
-    console.log('updatePwd::payload:', payload);
-    
-    if(payload.code && payload.code > 0){
-        return payload
-    }
+    // let payload = uniToken.checkToken(user.token)
+    // console.log('updatePwd::payload:', payload);
 
-    if(payload.uid !== user.uid){
-        return {
-            code: 1105,
-            msg: 'token不合法，请重新登录'
-        }
-    }
+    // if(payload.code && payload.code > 0){
+    //     return payload
+    // }
+
+    // if(payload.uid !== user.uid){
+    //     return {
+    //         code: 1105,
+    //         msg: 'token不合法，请重新登录'
+    //     }
+    // }
 
     const userInDB = await userCollection.doc(user.uid).get()
 
@@ -31,7 +31,7 @@ async function updatePwd(user, context) {
 
 
             try {
-                await userCollection.doc(userInDB.data[0]._id).update({
+                let upRes = await userCollection.doc(userInDB.data[0]._id).update({
                     password: encryptPwd(user.newPassword)
                 });
 
@@ -42,6 +42,7 @@ async function updatePwd(user, context) {
                     msg: '修改成功'
                 }
             } catch (e) {
+                console.log('发生异常', e);
                 return {
                     code: 1104,
                     msg: '数据库写入异常'
