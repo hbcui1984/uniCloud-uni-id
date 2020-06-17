@@ -4,15 +4,28 @@ import userCollection from './init.js'
  * @param {Object} uid
  * @param {Object} context
  */
-async function logout(uid, context) {
+async function logout(token) {
     try {
-        let upRes = await userCollection.doc(uid).update({
+
+        const payload = await uniToken.checkToken(token)
+        console.log('logout::payload:', payload);
+
+        if (payload.code && payload.code > 0) {
+            return payload
+        }
+
+        let upRes = await userCollection.doc(payload.uid).update({
             token: ''
         });
-        
-        //TODO 是否需要校验uid的真实性？即upRes.updated =0 时如何返回？
 
         console.log('logout->upRes', upRes);
+
+        if (upRes.updated == 0) {
+            return {
+                code: 1101,
+                msg: '用户不存在'
+            }
+        }
 
         return {
             code: 0,
