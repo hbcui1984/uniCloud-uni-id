@@ -4,21 +4,6 @@ import userCollection from './init.js'
 
 async function updatePwd(user, context) {
 
-
-    // let payload = uniToken.checkToken(user.token)
-    // console.log('updatePwd::payload:', payload);
-
-    // if(payload.code && payload.code > 0){
-    //     return payload
-    // }
-
-    // if(payload.uid !== user.uid){
-    //     return {
-    //         code: 1105,
-    //         msg: 'token不合法，请重新登录'
-    //     }
-    // }
-
     const userInDB = await userCollection.doc(user.uid).get()
 
     console.log('userInDB:', userInDB);
