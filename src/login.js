@@ -30,8 +30,6 @@ async function login(user, context) {
 
                 console.log('upRes', upRes);
 
-
-
                 return {
                     code: 0,
                     token: token,
