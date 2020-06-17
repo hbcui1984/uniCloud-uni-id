@@ -1,21 +1,17 @@
 import jwt from 'jsonwebtoken'
 import userCollection from './init.js'
 import {
-    tokenSecret
+    tokenSecret,tokenExpiresIn
 } from './config.json'
 
-// const tokenSecret = 'your-pwd-sec'
-
-console.log(tokenSecret);
 
 let uniToken = {
     createToken: function(user) {
         var token = jwt.sign({
             uid: user._id
         }, tokenSecret, {
-            expiresIn: 60 * 60
+            expiresIn: tokenExpiresIn
         });
-
 
         return token;
 
@@ -42,11 +38,22 @@ let uniToken = {
             return payload
         } catch (err) {
             console.log('checkToken 3', err);
+            
+            if(err.name == "TokenExpiredError"){
+                return {
+                    code: 1301,
+                    msg: 'token已过期，请重新登录',
+                    err: err
+                }
+            }
+            
             return {
-                code: 1301,
+                code: 1302,
                 msg: '非法token',
                 err: err
             }
+            
+            
         }
     }
 }
